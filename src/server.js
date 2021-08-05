@@ -6,14 +6,16 @@ const dbClient = require("./utils/database");
 const app = express();
 
 //ROUTERS
-const booksRouter = require("./resources/books/router")
+const booksRouter = require("./resources/books/router");
+const petsRouter = require("./resources/pets/router");
 
 //MIDDLEWARE
 app.use(morgan("dev"));
 app.use(express.json());
 
 //ROUTES
-app.use("/books", booksRouter)
+app.use("/books", booksRouter);
+app.use("/pets", petsRouter);
 
 //INITIALISE SERVER AND CONNECT DB
 const port = 4000;
