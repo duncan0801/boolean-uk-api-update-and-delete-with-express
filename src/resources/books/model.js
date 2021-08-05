@@ -83,22 +83,31 @@ function Book() {
 			.catch(console.error);
 	}
 	function updateById(updateBody, bookId, callback) {
-		//1. find the book we're talking about using getOneById()
-		const keyToUpdate = Object.keys(updateBody);
-		const valueToUpdate = Object.values(updateBody);
-		//2. Return the values of the book
-		const sql = `
-            UPDATE books
-            SET ($1) = ($2)
-            WHERE id = ($3)
-            RETURNING *;
-        `;
-		dbClient
-			.query(sql, [...keyToUpdate, ...valueToUpdate, bookId])
-			.then((resp) => {
-				callback(resp.rows[0]);
-			})
-			.catch(console.error);
+
+		getOneById(bookId, (book) => {
+			const updatedBook = { ...book, ...updateBody };
+			const { title, type, author, topic, publicationdate } = updatedBook;
+
+			const sql = `
+                UPDATE books
+                SET title = ($1), type = ($2), author = ($3), topic = ($4), publicationdate = ($5)
+                WHERE id = ($6)
+                RETURNING *;
+            `;
+			dbClient
+				.query(sql, [
+					title,
+					type,
+					author,
+					topic,
+					publicationdate,
+					bookId,
+				])
+				.then((resp) => {
+					callback(resp.rows[0]);
+				})
+				.catch(console.error);
+		});
 	}
 
 	createTable();

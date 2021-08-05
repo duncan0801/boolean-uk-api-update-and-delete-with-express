@@ -20,9 +20,11 @@ function createOneBook(req, res) {
 	});
 }
 function updateBookById(req, res) {
-    const updateBody = req.body
+    const updateData = req.body
     const bookId = req.params.id
-    updateById(updateBody, bookId, (result) => {
+
+
+    updateById(updateData, bookId, (result) => {
 		res.json({ updatedBook: result });
 	})
 }
