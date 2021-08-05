@@ -2,7 +2,7 @@
 const { response } = require("express");
 const Book = require("./model");
 
-const { getAll, getOneById, creatOne, updateById } = Book();
+const { getAll, getOneById, creatOne, updateById, deleteById } = Book();
 
 function getAllBooks(req, res) {
 	getAll((result) => res.json({ books: result }));
@@ -20,13 +20,27 @@ function createOneBook(req, res) {
 	});
 }
 function updateBookById(req, res) {
-    const updateData = req.body
-    const bookId = req.params.id
+	const updateData = req.body;
+	const bookId = Number(req.params.id);
 
-
-    updateById(updateData, bookId, (result) => {
+	updateById(updateData, bookId, (result) => {
 		res.json({ updatedBook: result });
-	})
+	});
+}
+function deleteBookById(req, res) {
+	const bookId = Number(req.params.id);
+
+	deleteById(bookId, (deletedBook) => {
+		res.json({
+			msg: `You successfully deleted the book with id: ${bookId}`,
+		});
+	});
 }
 
-module.exports = { getAllBooks, getOneBookById, createOneBook, updateBookById };
+module.exports = {
+	getAllBooks,
+	getOneBookById,
+	createOneBook,
+	updateBookById,
+	deleteBookById,
+};

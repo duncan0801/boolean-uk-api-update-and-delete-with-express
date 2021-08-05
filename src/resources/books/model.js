@@ -83,7 +83,6 @@ function Book() {
 			.catch(console.error);
 	}
 	function updateById(updateBody, bookId, callback) {
-
 		getOneById(bookId, (book) => {
 			const updatedBook = { ...book, ...updateBody };
 			const { title, type, author, topic, publicationdate } = updatedBook;
@@ -109,11 +108,25 @@ function Book() {
 				.catch(console.error);
 		});
 	}
+	function deleteById(bookIdToDelete, callback) {
+		const sql = `
+            DELETE FROM books
+            WHERE id = ($1);
+        `;
+
+		dbClient
+			.query(sql, [bookIdToDelete])
+			.then((result) => {
+                console.log(result)
+				callback(result.rows[0]);
+			})
+			.catch(console.error);
+	}
 
 	createTable();
 	mockData();
 
-	return { getAll, getOneById, creatOne, updateById };
+	return { getAll, getOneById, creatOne, updateById, deleteById };
 }
 
 module.exports = Book;
